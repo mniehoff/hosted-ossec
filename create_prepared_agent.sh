@@ -8,7 +8,7 @@ set -e
 #apt-get --purge -y remove ossec-hids-agent
 
 
-export OSSEC_MANAGER_IP="54.244.48.91"
+export OSSEC_MANAGER_IP="35.157.98.125"
 #SNORT=1
 
 check_cmd() {
@@ -33,18 +33,17 @@ else
 	URL='https://ossec.wazuh.com/repos/apt/ubuntu/pool/main/o/ossec-hids-agent/ossec-hids-agent_2.8.3-4xenial_amd64.deb'
 	TMPFILE=`mktemp`
 	wget "$URL" -qO $TMPFILE
-	DEBIAN_FRONTEND=noninteractive dpkg -i --force-all $TMPFILE 
-	rm -f $TMPFILE 
+	DEBIAN_FRONTEND=noninteractive dpkg -i --force-all $TMPFILE
+	rm -f $TMPFILE
 fi
 
 cd /
 wget http://download.redis.io/releases/redis-3.2.8.tar.gz
 tar xvfz redis-3.2.8.tar.gz
 cd redis-3.2.8
-make distclean  
+make distclean
 make
-cd src
-cp redis-server redis-cli /usr/local/bin
+cp src/redis-cli /usr/local/bin
 
 mv /var/ossec/etc/ossec.conf /var/ossec/etc/ossec.conf.orig
 
@@ -66,19 +65,19 @@ cd "$DIR"
 
 if [ -z "$SNORT" ]; then
    sed -i'' 's/RPLC_PROFILE/default/' /var/ossec/etc/ossec.conf
-   
+
    crontab -l > /tmp/rootcron.tmp 2>/dev/null
 
 	if [[ $(cat /tmp/rootcron.tmp) != *"tcpdmps3"* ]]
 	then
-		   echo "* * * * * /usr/bin/flock -w 1000 /var/tcpdump.lock $DIR/tcpdmps3.sh" >> /tmp/rootcron.tmp
+		   echo "* * * * * /usr/bin/flock -w 600 /var/tcpdump.lock $DIR/tcpdmps3.sh" >> /tmp/rootcron.tmp
 		   crontab /tmp/rootcron.tmp
 	else
 		   :
 	fi
 
 	rm -rf /tmp/rootcron.tmp
-   
+
 else
    sed -i'' 's/RPLC_PROFILE/snort/' /var/ossec/etc/ossec.conf
    echo "snort" > /snort_installed

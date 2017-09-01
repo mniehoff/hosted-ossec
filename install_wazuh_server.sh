@@ -15,9 +15,9 @@ ID="ccossec3"
 
 echo "$ID" > /ID
 
-ELASTIC_HOST="https://9afbe6de76d467ba76d3bacda75a6006.us-east-1.aws.found.io:9243"
+ELASTIC_HOST="https://ac94a37dc92f2e5f971b4d4a1c7b1b97.us-east-1.aws.found.io:9243/"
 ELASTIC_USER="elastic"
-ELASTIC_PASSWD="zoERW3xdkDHEUXimrbdcMLGJ"
+ELASTIC_PASSWD="e5302mTjgx8WrNo3MwQwA7G8"
 
 yum -y -q update
 yum -y -q install make gcc git openssl-devel openssl
@@ -64,12 +64,12 @@ cat >/var/ossec/etc/shared/agent.conf <<EOL
         <location>/var/log/kern.log</location>
         <log_format>syslog</log_format>
     </localfile>
-    
+
     <localfile>
         <location>/var/log/messages</location>
         <log_format>syslog</log_format>
     </localfile>
-    
+
     <localfile>
         <location>/var/log/secure</location>
         <log_format>syslog</log_format>
@@ -84,7 +84,7 @@ cat >/var/ossec/etc/shared/agent.conf <<EOL
         <location>/var/log/noexists.log</location>
         <log_format>syslog</log_format>
     </localfile>
-  
+
   <syscheck>
     <!-- Frequency that syscheck is executed -- default every 2 hours -->
     <frequency>7200</frequency>
@@ -107,7 +107,7 @@ cat >/var/ossec/etc/shared/agent.conf <<EOL
     <rootkit_trojans>/var/ossec/etc/shared/rootkit_trojans.txt</rootkit_trojans>
     <system_audit>/var/ossec/etc/shared/system_audit_rcl.txt</system_audit>
   </rootcheck>
-  
+
 </agent_config>
 EOL
 
@@ -131,11 +131,11 @@ filebeat.prospectors:
   paths:
     - "/var/ossec/logs/alerts/alerts.json"
     #- c:\programdata\elasticsearch\logs\*
-    
+
   document_type: json
   json.message_key: log
   json.keys_under_root: true
-  json.overwrite_keys: true  
+  json.overwrite_keys: true
 
   # Exclude lines. A list of regular expressions to match. It drops the lines that are
   # matching any regular expression from the list.
@@ -234,4 +234,3 @@ EOL
 
 chkconfig --add filebeat
 /etc/init.d/filebeat restart
-
